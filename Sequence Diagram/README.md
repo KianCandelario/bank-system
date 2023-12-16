@@ -1,2 +1,2 @@
 ### NOTE:
-I created this sequence diagram for the sole purpose of conceptualizing how the components interact with each other, essentially to make programming much easier. I did it on a whim, and this is actually my first time creating one; for that reason, I may have misused some symbols and arrows.
+I created this sequence diagram for the sole purpose of conceptualizing how the components interact with each other, essentially to make programming much easier. I did it on a whim, and this is actually my first time creating one; for that reason, I may have done it incorrectly or I may have misused some symbols and arrows.
