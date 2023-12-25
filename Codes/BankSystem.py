@@ -3,6 +3,7 @@ import os
 import time
 
 # Variables
+INITIAL_MENUS_VALID_CHOICES = [0,1,2]
 create_acc_or_client = 0
 open_acc_or_client_m = 0
 
@@ -28,13 +29,8 @@ def menu_layout(title, choice1, choice2, choice3):
 
     print("====================================")
 
-def menu_error_notifier1():
-    print("You can only choose [1], [2], or [0]. Please try again.")
-    time.sleep(3)  # 3 second delay before clearing the screen
-    clear()
-
-def menu_error_notifier2():
-    print("You entered an invalid input. Please try again.")
+def menu_notifier(message):
+    print(message)
     time.sleep(3)  # 3 second delay before clearing the screen
     clear()
 
@@ -45,7 +41,7 @@ def menu_error_notifier2():
 def initialMenu():
     while True:
         try:
-            valid_choices = [0,1,2]
+            valid_choices = INITIAL_MENUS_VALID_CHOICES
 
             menu_layout(title="KiBank Illuminaire", choice1="Open an Account", choice2="Client Management", choice3="Exit")
             initial_menu_choice = int(input("\tEnter your choice: "))
@@ -53,54 +49,65 @@ def initialMenu():
             print()
 
             if initial_menu_choice not in valid_choices:
-                menu_error_notifier1()
+                print()
+                menu_notifier(message="You can only choose [1], [2], or [0]. Please try again.")
                 continue
             else:
                 return initial_menu_choice
         except:
-            menu_error_notifier2()
+            print()
+            menu_notifier(message="You entered an invalid input. Please try again.")
             continue
 
 
 def clientManagement():
     while True:
         try:
-            valid_choices = [0,1,2]
+            print("====================================")
+            print()
+            menu_notifier(message="You selected [2] Client Management. Please wait a second...")
+
+            valid_choices = INITIAL_MENUS_VALID_CHOICES
 
             menu_layout(title="Client Management", choice1="List All Clients", choice2="Find a Client", choice3="Back")
 
             client_m_choice = int(input("\tEnter your choice: "))
 
-            print()
-
             if client_m_choice not in valid_choices:
-                menu_error_notifier1()
+                print()
+                menu_notifier(message="You can only choose [1], [2], or [0]. Please try again.")
                 continue
             else:
                 return client_m_choice
         except:
-            menu_error_notifier2()
+            print()
+            menu_notifier(message="You entered an invalid input. Please try again.")
             continue
 
 
 def openAccount():
     while True:
         try:
-            valid_choices = [0,1,2]
+            print("====================================")
+            print()
+            menu_notifier(message="You selected [1] Open an Account. Please wait a second...")
+
+            valid_choices = INITIAL_MENUS_VALID_CHOICES
 
             menu_layout(title="KiBank Illuminaire", choice1="New Client", choice2="Old Client", choice3="Back")
             
             open_acc_choice = int(input("\tEnter your choice: "))
 
-            print()
 
             if open_acc_choice not in valid_choices:
-                menu_error_notifier1()
+                print()
+                menu_notifier(message="You can only choose [1], [2], or [0]. Please try again.")
                 continue
             else:
                 return open_acc_choice
         except:
-            menu_error_notifier2()
+            print()
+            menu_notifier(message="You entered an invalid input. Please try again.")
             continue
 
 
@@ -113,4 +120,6 @@ if create_acc_or_client == 1:
 elif create_acc_or_client == 2:
     open_acc_or_client_m = clientManagement()
 elif create_acc_or_client == 0:
+    print("Thank you. Please come again!")
+    print()
     exit()
