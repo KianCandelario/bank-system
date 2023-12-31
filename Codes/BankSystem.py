@@ -112,12 +112,13 @@ def create_client_menu():
             print("====================================")
             print("\tClient Application Form")
             print("====================================")
-            desired_id = int(input("Enter your desired Client ID (Must be 4 digits): "))
+            print()
+            desired_id = int(input("Enter your desired Client ID [XXXX]: "))
             surname = input("Enter your surname: ")
             fname = input("Enter your first name: ")
             contact_no = input("Enter your contact number: ")
             gmail = input("Enter your email address: ")
-            pin = input("Enter your desired PIN number (Must be 4 digits): ")
+            pin = input("Enter your desired PIN number [XXXX]: ")
 
             return desired_id, surname, fname, contact_no, gmail, pin
         except:
@@ -125,11 +126,65 @@ def create_client_menu():
             menu_notifier(message="[ERROR] You entered an invalid input. Please try again.")
             continue
 
+def bank_account_creation_form():
+    while True:
+        try:
+            print("====================================")
+            print("\tBank Account Creation Form")
+            print("====================================")
+            print()
+            bank_acc_id = int(input(("Enter your desired Bank Account ID [XXXX]: ")))
+            balance = int(input(("Enter the balance: ")))
+
+            return bank_acc_id, balance
+        except:
+            print()
+            menu_notifier(message="[ERROR] You entered an invalid input. Please try again.")
+            continue
+
+def bank_account_management_menu():
+    print("=======================================")
+    print("\tBank Account Management")
+    print("=======================================")
+    print()
+    print("[1] Open a New Bank Account")
+    print("[2] List All of Existing Accounts")
+    print("[3] Check Balance")
+    print("[4] Deposit to an Account")
+    print("[5] Withdraw from an Account")
+    print("[6] Delete an Existing Bank Account")
+    print("[7] View your Client Profile")
+    print("[0] Exit")
+    print()
+    print("=======================================")
+    user_choice = int(input("Enter your choice: "))
+
+    return user_choice
+
+
 
 
 ##### Query functions
-def createAccount():
-    pass
+def createAccount(bank_acc_id, balance, client_id):
+    try:
+        query = f"INSERT INTO {ba_configs['table_name']} ({ba_configs['column1']}, {ba_configs['column2']}, {ba_configs['column3']}) VALUES (%s, %s, %s)"
+
+        ba_cursor.execute(query, (bank_acc_id, balance, client_id))
+        ba_db.commit()
+
+        print()
+        print("Query executed successfully.")
+        print()
+        return True
+    
+    except Exception as e:
+        bc_db.rollback()
+
+        print()
+        print(f"Error executing query: {e}")
+        print()
+
+        return False
 
 
 def createClient(id, surname, first_name, contact_no, gmail, pin):
@@ -179,6 +234,7 @@ def main():
                 print()
                 menu_notifier(message="[NOTICE] You selected [0] Back. Going back to the previous screen...")
                 continue
+
             if open_acc_or_client_m == 1:
                 print("====================================")
                 print()
@@ -186,14 +242,29 @@ def main():
 
                 desired_id, surname, fname, contact_no, gmail, pin = create_client_menu()
 
-                successful = createClient(desired_id, surname, fname, contact_no, gmail, pin)
+                client_successful = createClient(desired_id, surname, fname, contact_no, gmail, pin)
 
-                if successful:
-                    menu_notifier(message="Client creation successful. Going back to the menu...")
-                    continue
+                if client_successful:
+                    menu_notifier(message="Client creation successful.")
+
+                    print("[NOTICE] Creating your First Bank Account")
+                    print()
+                    
+                    bank_acc_id, balance = bank_account_creation_form()
+
+                    bank_successful = createAccount(bank_acc_id, balance, desired_id)
+
+                    if bank_successful:
+                        menu_notifier(message="Client creation successful. Going back to the menu...")
+                        continue
+
+                    else:
+                        menu_notifier(message="Client creation failed. Going back to the menu...")
+                        continue
+
                 else:
                     menu_notifier(message="Client creation failed. Going back to the menu...")
-                    continue
+                    continue 
 
 
         elif create_acc_or_client == 2:
