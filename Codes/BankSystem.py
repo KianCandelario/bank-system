@@ -39,7 +39,7 @@ def menu_layout(title, choice1, choice2, choice3):
 
 def menu_notifier(message):
     print(message)
-    time.sleep(3)  # 3 second delay before clearing the screen
+    time.sleep(5)  # 5 second delay before clearing the screen
     clear()
 
 
@@ -129,9 +129,9 @@ def create_client_menu():
 def bank_account_creation_form():
     while True:
         try:
-            print("====================================")
-            print("\tBank Account Creation Form")
-            print("====================================")
+            print("=====================================")
+            print("    Bank Account Creation Form")
+            print("=====================================")
             print()
             bank_acc_id = int(input(("Enter your desired Bank Account ID [XXXX]: ")))
             balance = int(input(("Enter the balance: ")))
@@ -142,24 +142,65 @@ def bank_account_creation_form():
             menu_notifier(message="[ERROR] You entered an invalid input. Please try again.")
             continue
 
-def bank_account_management_menu():
-    print("=======================================")
-    print("\tBank Account Management")
-    print("=======================================")
-    print()
-    print("[1] Open a New Bank Account")
-    print("[2] List All of Existing Accounts")
-    print("[3] Check Balance")
-    print("[4] Deposit to an Account")
-    print("[5] Withdraw from an Account")
-    print("[6] Delete an Existing Bank Account")
-    print("[7] View your Client Profile")
-    print("[0] Exit")
-    print()
-    print("=======================================")
-    user_choice = int(input("Enter your choice: "))
+def client_PIN_verification():
+    while True:
+        try:
+            print("=====================================")
+            print("  Returning Client PIN Verification")
+            print("=====================================")
+            print()
+            user_PIN = int(input("Enter your Client PIN [XXXX]: "))
 
-    return user_choice
+            # Check if PIN exists in the database
+            query = f"SELECT * FROM {bc_configs['table_name']} WHERE {bc_configs['column6']} = {user_PIN}"
+            bc_cursor.execute(query)
+            result = bc_cursor.fetchone()
+
+            if result:
+                return True
+            else:
+                print()
+                menu_notifier(message="[ERROR] PIN does not exist. Please try again.")
+
+        except ValueError:
+            print()
+            menu_notifier(message="[ERROR] You entered an invalid input. Please enter a valid PIN.")
+        except Exception as e:
+            print()
+            menu_notifier(message=f"[ERROR] An error occurred: {str(e)}")
+
+
+def bank_acc_management_menu():
+    while True:
+        try:
+            valid_choices = [0, 1, 2, 3, 4, 5, 6, 7]
+            
+            print("=======================================")
+            print("       Bank Account Management")
+            print("=======================================")
+            print()
+            print("[1] Open a New Bank Account")
+            print("[2] List All of Existing Accounts")
+            print("[3] Check Balance")
+            print("[4] Deposit to an Account")
+            print("[5] Withdraw from an Account")
+            print("[6] Delete an Existing Bank Account")
+            print("[7] View your Client Profile")
+            print("[0] Exit")
+            print()
+            print("=======================================")
+            user_choice = int(input("Enter your choice: "))
+
+            if user_choice not in valid_choices:
+                print()
+                menu_notifier(message="[ERROR] You can only choose numbers from [0] up to [7]. Please try again.")
+                continue
+            else:
+                return user_choice
+        except:
+            print()
+            menu_notifier(message="[ERROR] You entered an invalid input. Please try again.")
+            continue
 
 
 
@@ -265,6 +306,20 @@ def main():
                 else:
                     menu_notifier(message="Client creation failed. Going back to the menu...")
                     continue 
+
+            elif open_acc_or_client_m == 2:
+                print("====================================")
+                print()
+                menu_notifier(message="[NOTICE] You selected [2] Returning Client. Please wait a second...")
+
+                PIN_verification = client_PIN_verification()
+
+                if PIN_verification:
+                    print()
+                    menu_notifier(message="PIN Verification Successful. Please wait a second...")
+                    
+                    bank_acc_management_choice = bank_acc_management_menu()
+                
 
 
         elif create_acc_or_client == 2:
