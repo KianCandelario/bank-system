@@ -23,6 +23,7 @@ class BankClient:
     )
     CURSOR = DATABASE.cursor()
 
+
     # Provided default values to make the arguments optional
     def __init__(self, id=0, name=""):
         self.id = id
@@ -34,7 +35,6 @@ class BankClient:
         self.CURSOR.execute(query)
         result = self.CURSOR.fetchall()
         return result    
-
 
     def list_all_clients(self):
         query = f"SELECT * FROM {self.CLIENT_CONFIG['table_name']}"
@@ -81,4 +81,14 @@ class BankClient:
 
 
     def printDetails(self):
-        pass
+        query = f"SELECT * FROM {self.CLIENT_CONFIG['table_name']} WHERE {self.CLIENT_CONFIG['column1']} = {self.id}"
+        result = self.execute_query(query)
+        if result:
+            client_details = result[0]
+            print(f"Client ID: {client_details[0]}")
+            print(f"Surname: {client_details[1]}")
+            print(f"First Name: {client_details[2]}")
+            print(f"Contact No: {client_details[3]}")
+            print(f"Gmail: {client_details[4]}")
+        else:
+            print("Client not found")
