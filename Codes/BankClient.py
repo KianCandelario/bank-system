@@ -28,43 +28,57 @@ class BankClient:
         self.id = id
         self.name = name
     
+
+    ### Auxillary function
+    def execute_query(self, query):
+        self.CURSOR.execute(query)
+        result = self.CURSOR.fetchall()
+        return result    
+
+
     def list_all_clients(self):
-        try:
-            print("====================================")
-            print("\tList of All the Clients")
-            print("====================================")
-            print()
+        query = f"SELECT * FROM {self.CLIENT_CONFIG['table_name']}"
+        result = self.execute_query(query)
 
-            # Retrieve all clients from the database
-            query = f"SELECT {self.CLIENT_CONFIG['column1']}, {self.CLIENT_CONFIG['column2']}, {self.CLIENT_CONFIG['column3']} FROM {self.CLIENT_CONFIG['table_name']}"
-            self.CURSOR.execute(query)
-            results = self.CURSOR.fetchall()
+        print("====================================")
+        print("\tList of All Clients")
+        print("====================================")
 
-            for result in results:
-                client_id, surname, first_name = result
-                print(f"Client ID: {client_id}")
-                print(f"Name: {surname}, {first_name}\n")
-            
-            print()
-            print("====================================")
-            input("\tPress [ENTER] to go back.")
+        if result:
+            for client_details in result:
+                self.id = client_details[0]
+                name = self.getName()
+                id_number = self.getIDNumber()
 
-        except Exception as e:
-            print(f"[ERROR] An error occurred: {str(e)}")
-        finally:
-            # Close the cursor after execution
-            self.CURSOR.close()
-            # Reopen the cursor to avoid issues in subsequent queries
-            self.CURSOR = self.DATABASE.cursor()
+                print(f"ClientID: {id_number}")
+                print(f"Name: {name}")
+                print()
+        else:
+            print("No clients found")
 
-    def getName():
-        pass
+        print("====================================")
+        input("\tPress [ENTER] to Back")
 
-    def getIDNumber():
-        pass
 
-    def getAccount():
-        pass
+    ### Main Functions
+    def getName(self):
+        query = f"SELECT {self.CLIENT_CONFIG['column2']}, {self.CLIENT_CONFIG['column3']} FROM {self.CLIENT_CONFIG['table_name']} WHERE {self.CLIENT_CONFIG['column1']} = {self.id}"
+        result = self.execute_query(query)
+        if result:
+            surname, firstname = result[0]
+            return f"{surname}, {firstname}"
+        else:
+            return None
 
-    def printDetails():
+
+    def getIDNumber(self):
+        query = f"SELECT {self.CLIENT_CONFIG['column1']} FROM {self.CLIENT_CONFIG['table_name']} WHERE {self.CLIENT_CONFIG['column1']} = {self.id}"
+        result = self.execute_query(query)
+        if result:
+            return result[0][0]
+        else:
+            return None
+
+
+    def printDetails(self):
         pass
