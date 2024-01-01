@@ -172,6 +172,22 @@ def client_PIN_verification():
             print()
             menu_notifier(message=f"[ERROR] An error occurred: {str(e)}")
 
+def client_finding():
+    while True:
+        try:
+            print("====================================")
+            print("\t   Finding Client")
+            print("====================================")
+            print()
+            client_id = int(input("Enter the Client ID: "))
+
+            return client_id
+
+        except:
+            print()
+            menu_notifier(message="[ERROR] You entered an invalid input. Please try again.")
+            continue
+
 
 def bank_acc_management_menu():
     while True:
@@ -189,7 +205,7 @@ def bank_acc_management_menu():
             print("[5] Withdraw from an Account")
             print("[6] Delete an Existing Bank Account")
             print("[7] View your Client Profile")
-            print("[0] Exit")
+            print("[0] Out")
             print()
             print("=======================================")
             user_choice = int(input("Enter your choice: "))
@@ -257,9 +273,12 @@ def findAccount():
     pass
 
 
-def findClient():
-    pass
+def findClient(client_id):
+    query = f"SELECT * FROM {bc_configs['table_name']} WHERE {bc_configs['column1']} = {client_id}"
+    bc_cursor.execute(query)
+    result = bc_cursor.fetchall()
 
+    return bool(result)
 
 
 
@@ -345,7 +364,40 @@ def main():
                 CLIENT_INSTANCE.list_all_clients()
 
             elif open_acc_or_client_m == 2:
-                pass
+                print("====================================")
+                print()
+                menu_notifier(message="[NOTICE] You selected [2] Find Client. Please wait a second...")
+                id_client = client_finding()
+                client_found = findClient(id_client)
+
+                if client_found:
+                    # Class instance
+                    CLIENT_INSTANCE = BankClient(id=id_client)
+                    print()
+                    print()
+                    print("\t   --- Results ---")
+                    print("====================================")
+                    print("\t\tClient found")
+                    print("====================================")
+                    print()
+                    CLIENT_INSTANCE.printDetails()
+                    print()
+                    print("====================================")
+                    input("      Press [ENTER] to Back")
+                    continue
+                else:
+                    print()
+                    print()
+                    print("\t   --- Results ---")
+                    print("====================================")
+                    print()
+                    print("     This Client doesn't Exist")
+                    print()
+                    print("====================================")
+                    input("      Press [ENTER] to Back")
+                    continue
+                
+
 
         elif create_acc_or_client == 0:
             print()
