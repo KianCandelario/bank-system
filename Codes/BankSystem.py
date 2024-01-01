@@ -1,21 +1,24 @@
 #from colorama import Fore
 import os
 import time
-from BankAccount import BankAccount as ba
-from BankClient import BankClient as bc
+from BankAccount import BankAccount
+from BankClient import BankClient
+
+##### Class instance
+CLIENT_INSTANCE = BankClient()
 
 ##### Global Variables
 INITIAL_MENUS_VALID_CHOICES = [0,1,2]
 create_acc_or_client = 0
 open_acc_or_client_m = 0
 
-ba_cursor = ba.CURSOR
-ba_configs = ba.ACCOUNT_CONFIG
-ba_db = ba.DATABASE
+ba_cursor = BankAccount.CURSOR
+ba_configs = BankAccount.ACCOUNT_CONFIG
+ba_db = BankAccount.DATABASE
 
-bc_cursor = bc.CURSOR
-bc_configs =  bc.CLIENT_CONFIG
-bc_db = bc.DATABASE
+bc_cursor = BankClient.CURSOR
+bc_configs =  BankClient.CLIENT_CONFIG
+bc_db = BankClient.DATABASE
 
 
 ###### Auxillary functions
@@ -157,7 +160,7 @@ def client_PIN_verification():
             result = bc_cursor.fetchone()
 
             if result:
-                return True
+                return True, user_PIN
             else:
                 print()
                 menu_notifier(message="[ERROR] PIN does not exist. Please try again.")
@@ -263,6 +266,7 @@ def findClient():
 ###### Main Function
 def main():
     while True:
+        clear()
         create_acc_or_client = initialMenu()
 
         if create_acc_or_client == 1:
@@ -312,12 +316,12 @@ def main():
                 print()
                 menu_notifier(message="[NOTICE] You selected [2] Returning Client. Please wait a second...")
 
-                PIN_verification = client_PIN_verification()
+                PIN_verification, user_PIN = client_PIN_verification()
 
                 if PIN_verification:
                     print()
                     menu_notifier(message="PIN Verification Successful. Please wait a second...")
-                    
+
                     bank_acc_management_choice = bank_acc_management_menu()
                 
 
@@ -333,6 +337,15 @@ def main():
                 print()
                 menu_notifier(message="[NOTICE] You selected [0] Back. Going back to the previous screen...")
                 continue
+
+            elif open_acc_or_client_m == 1:
+                print("====================================")
+                print()
+                menu_notifier(message="[NOTICE] You selected [1] List All of the Clients. Please wait a second...")
+                CLIENT_INSTANCE.list_all_clients()
+
+            elif open_acc_or_client_m == 2:
+                pass
 
         elif create_acc_or_client == 0:
             print()
