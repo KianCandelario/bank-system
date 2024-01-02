@@ -216,7 +216,7 @@ def bank_acc_management_menu():
             print("[5] Withdraw from an Account")
             print("[6] Delete an Existing Bank Account")
             print("[7] View your Client Profile")
-            print("[0] Exit")
+            print("[0] Out")
             print()
             print("=======================================")
             user_choice = int(input("Enter your choice: "))
@@ -359,8 +359,8 @@ def main():
                             if bank_acc_management_choice == 0:
                                 print("=======================================")
                                 print()
-                                print("[NOTICE] Thank you for trusting our bank!")
-                                sys.exit()
+                                menu_notifier(message="[NOTICE] You selected [0] Out. Going back to menu...")
+                                break
 
                             elif bank_acc_management_choice == 1:
                                 print("=======================================")
