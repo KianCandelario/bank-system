@@ -102,4 +102,17 @@ class BankAccount:
             print("Account not found")
 
     def withdraw(self, account_id, withdraw_amount):
-        pass
+        self.id = account_id
+        current_balance = self.getBalance()
+        if current_balance is not None:
+            if current_balance >= withdraw_amount:
+                new_balance = current_balance - withdraw_amount
+                self.update_balance(account_id, new_balance)
+                print(f"Withdrawal of ₱ {withdraw_amount} successful.")
+                print(f"New balance: ₱ {new_balance}")
+                return True
+            else:
+                print("Insufficient funds. Withdrawal unsuccessful.")
+                return False
+        else:
+            print("Account not found. Withdrawal unsuccessful.")

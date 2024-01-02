@@ -267,6 +267,33 @@ def deposit_form():
             menu_notifier(message="[ERROR] You entered an invalid input. Please try again.")
             continue
 
+def withdraw_form():
+    while True:
+        try:
+            print("====================================")
+            print("\tWithdraw from an Account")
+            print("====================================")
+            print()
+            account_id = int(input("Enter the Account ID: "))
+            withdraw_amount = int(input("Enter the Withdraw amount: "))
+            print()
+            print("====================================")
+            print()
+            
+            successful = ACCOUNT_INSTANCE.withdraw(account_id, withdraw_amount)
+            if successful:
+                print()
+                print("====================================")
+                print()
+                input("Press [ENTER] to continue...")
+                break
+            else:
+                continue
+        except:
+            print()
+            menu_notifier(message="[ERROR] You entered an invalid input. Please try again.")
+            continue
+
 
 ##### Query functions
 def createAccount(bank_acc_id, balance, client_id):
@@ -460,8 +487,6 @@ def main():
 
                                 account_id, deposit_amount = deposit_form()
 
-                                ACCOUNT_INSTANCE = BankAccount()
-
                                 ACCOUNT_INSTANCE.deposit(account_id, deposit_amount)
                                 
                                 print()
@@ -470,8 +495,12 @@ def main():
 
 
                             elif bank_acc_management_choice == 5:
-                                pass
+                                print("=======================================")
+                                print()
+                                menu_notifier(message="[NOTICE] You selected [5] Withdraw. Please wait a second...")
 
+                                withdraw_form()
+                                
                         except:
                             print("====================================")
                             print()
