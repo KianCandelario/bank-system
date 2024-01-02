@@ -43,8 +43,8 @@ class BankAccount:
 
         if result:
             for account_details in result:
-                self.id = account_details[0]
-                client_id = self.getIDNumber()
+                self.id = self.getIDNumber()
+                client_id = account_details[2] 
                 balance = self.getBalance()
 
                 print(f"Account ID: {self.id}")
@@ -74,8 +74,16 @@ class BankAccount:
         else:
             return None
 
-    def printDetails():
-        pass
+    def printDetails(self):
+        query = f"SELECT * FROM {self.ACCOUNT_CONFIG['table_name']} WHERE {self.ACCOUNT_CONFIG['column1']} = {self.id}"
+        result = self.execute_query(query)
+        if result:
+            account_details = result[0]
+            print(f"Account ID: {account_details[0]}")
+            print(f"Balance: {account_details[1]}")
+            print(f"Client ID: {account_details[2]}")
+        else:
+            print("Client not found")
 
     def deposit():
         pass
