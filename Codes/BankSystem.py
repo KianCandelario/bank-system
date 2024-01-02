@@ -1,5 +1,6 @@
 #from colorama import Fore
 import os
+import sys
 import time
 from BankAccount import BankAccount
 from BankClient import BankClient
@@ -45,10 +46,20 @@ def menu_notifier(message):
     time.sleep(5)  # 5 second delay before clearing the screen
     clear()
 
+def get_clientID_by_PIN(pin):
+    query = f"SELECT {bc_configs['column1']} FROM {bc_configs['table_name']} WHERE {bc_configs['column6']} = {pin}"
+    bc_cursor.execute(query)
+    result = bc_cursor.fetchall()
+        
+    if result:
+        return result[0][0]  # Return the first matching ClientID
+    else:
+        return None  # Return None if no matching PIN is found
 
 
 
-###### Menus
+
+###### Menus/Forms
 def initialMenu():
     while True:
         try:
@@ -205,7 +216,7 @@ def bank_acc_management_menu():
             print("[5] Withdraw from an Account")
             print("[6] Delete an Existing Bank Account")
             print("[7] View your Client Profile")
-            print("[0] Out")
+            print("[0] Exit")
             print()
             print("=======================================")
             user_choice = int(input("Enter your choice: "))
@@ -319,11 +330,11 @@ def main():
                     bank_successful = createAccount(bank_acc_id, balance, desired_id)
 
                     if bank_successful:
-                        menu_notifier(message="Client creation successful. Going back to the menu...")
+                        menu_notifier(message="Account created successfully. Going back to the menu...")
                         continue
 
                     else:
-                        menu_notifier(message="Client creation failed. Going back to the menu...")
+                        menu_notifier(message="Account creation failed. Going back to the menu...")
                         continue
 
                 else:
@@ -340,8 +351,42 @@ def main():
                 if PIN_verification:
                     print()
                     menu_notifier(message="PIN Verification Successful. Please wait a second...")
+                    
+                    while True:
+                        try:
+                            bank_acc_management_choice = bank_acc_management_menu()
 
-                    bank_acc_management_choice = bank_acc_management_menu()
+                            if bank_acc_management_choice == 0:
+                                print("=======================================")
+                                print()
+                                print("[NOTICE] Thank you for trusting our bank!")
+                                sys.exit()
+
+                            elif bank_acc_management_choice == 1:
+                                print("=======================================")
+                                print()
+                                menu_notifier(message="[NOTICE] You selected [1] Open New Bank Account. Please wait a second...")
+
+                                bank_acc_id, balance = bank_account_creation_form()
+
+                                bank_successful = createAccount(bank_acc_id, balance, get_clientID_by_PIN(user_PIN))
+
+                                if bank_successful:
+                                    menu_notifier(message="Account created successfully. Going back to the menu...")
+                                    continue
+
+                                else:
+                                    menu_notifier(message="Account creation failed. Going back to the menu...")
+                                    continue
+                            
+                            '''elif bank_acc_management_choice == 2:
+                                pass'''
+
+                        except:
+                            print("====================================")
+                            print()
+                            menu_notifier(message="[ERROR] You entered an invalid input. Please try again...")
+                            continue
                 
 
 
@@ -401,9 +446,9 @@ def main():
 
         elif create_acc_or_client == 0:
             print()
-            print("Thank you. Please come again!")
+            print("[NOTICE] Thank you for trusting our bank!")
             print()
-            exit()
+            sys.exit()
 
 
 
