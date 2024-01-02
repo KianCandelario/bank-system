@@ -7,6 +7,7 @@ from BankClient import BankClient
 
 ##### Class instance
 CLIENT_INSTANCE = BankClient()
+ACCOUNT_INSTANCE = BankAccount()
 
 ##### Global Variables
 INITIAL_MENUS_VALID_CHOICES = [0,1,2]
@@ -205,6 +206,7 @@ def bank_acc_management_menu():
         try:
             valid_choices = [0, 1, 2, 3, 4, 5, 6, 7]
             
+            clear()
             print("=======================================")
             print("       Bank Account Management")
             print("=======================================")
@@ -243,9 +245,6 @@ def createAccount(bank_acc_id, balance, client_id):
         ba_cursor.execute(query, (bank_acc_id, balance, client_id))
         ba_db.commit()
 
-        print()
-        print("Query executed successfully.")
-        print()
         return True
     
     except Exception as e:
@@ -265,9 +264,6 @@ def createClient(id, surname, first_name, contact_no, gmail, pin):
         bc_cursor.execute(query, (id, surname, first_name, contact_no, gmail, pin))
         bc_db.commit()
 
-        print()
-        print("Query executed successfully.")
-        print()
         return True
     
     except Exception as e:
@@ -349,11 +345,13 @@ def main():
                 PIN_verification, user_PIN = client_PIN_verification()
 
                 if PIN_verification:
+                    print("====================================")
                     print()
                     menu_notifier(message="PIN Verification Successful. Please wait a second...")
                     
                     while True:
                         try:
+                            client_id = get_clientID_by_PIN(user_PIN)
                             bank_acc_management_choice = bank_acc_management_menu()
 
                             if bank_acc_management_choice == 0:
@@ -369,7 +367,7 @@ def main():
 
                                 bank_acc_id, balance = bank_account_creation_form()
 
-                                bank_successful = createAccount(bank_acc_id, balance, get_clientID_by_PIN(user_PIN))
+                                bank_successful = createAccount(bank_acc_id, balance, client_id)
 
                                 if bank_successful:
                                     menu_notifier(message="Account created successfully. Going back to the menu...")
@@ -379,8 +377,11 @@ def main():
                                     menu_notifier(message="Account creation failed. Going back to the menu...")
                                     continue
                             
-                            '''elif bank_acc_management_choice == 2:
-                                pass'''
+                            elif bank_acc_management_choice == 2:
+                                print("====================================")
+                                print()
+                                menu_notifier(message="[NOTICE] You selected [2] List All of Existing Accounts. Please wait a second...")
+                                ACCOUNT_INSTANCE.list_all_accounts()
 
                         except:
                             print("====================================")
