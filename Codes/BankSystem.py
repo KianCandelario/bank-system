@@ -66,7 +66,7 @@ def initialMenu():
         try:
             valid_choices = INITIAL_MENUS_VALID_CHOICES
 
-            menu_layout(title="KiBank Illuminaire", choice1="Open an Account", choice2="Client Management", choice3="Exit")
+            menu_layout(title="KiBank Illuminaire", choice1="Account Management", choice2="Client Management", choice3="Exit")
             initial_menu_choice = int(input("\tEnter your choice: "))
 
             if initial_menu_choice not in valid_choices:
@@ -200,24 +200,39 @@ def client_finding():
             menu_notifier(message="[ERROR] You entered an invalid input. Please try again.")
             continue
 
+def account_finding():
+    while True:
+        try:
+            print("====================================")
+            print("\t   Finding Account")
+            print("====================================")
+            print()
+            account_id = int(input("Enter the Account ID: "))
+
+            return account_id
+
+        except:
+            print()
+            menu_notifier(message="[ERROR] You entered an invalid input. Please try again.")
+            continue
+
 
 def bank_acc_management_menu():
     while True:
         try:
-            valid_choices = [0, 1, 2, 3, 4, 5, 6, 7]
+            valid_choices = [0, 1, 2, 3, 4, 5, 6]
             
             clear()
             print("=======================================")
-            print("       Bank Account Management")
+            print("          Account Management")
             print("=======================================")
             print()
             print("[1] Open a New Bank Account")
             print("[2] List All of Existing Accounts")
-            print("[3] Check Balance")
+            print("[3] Find an Account")
             print("[4] Deposit to an Account")
             print("[5] Withdraw from an Account")
-            print("[6] Delete an Existing Bank Account")
-            print("[7] View your Client Profile")
+            print("[6] View your Client Profile")
             print("[0] Out")
             print()
             print("=======================================")
@@ -276,8 +291,12 @@ def createClient(id, surname, first_name, contact_no, gmail, pin):
         return False
 
 
-def findAccount():
-    pass
+def findAccount(acc_id):
+    query = f"SELECT * FROM {ba_configs['table_name']} WHERE {ba_configs['column1']} = {acc_id}"
+    ba_cursor.execute(query)
+    result = ba_cursor.fetchall()
+
+    return bool(result)
 
 
 def findClient(client_id):
@@ -345,7 +364,7 @@ def main():
                 PIN_verification, user_PIN = client_PIN_verification()
 
                 if PIN_verification:
-                    print("====================================")
+                    print("=====================================")
                     print()
                     menu_notifier(message="PIN Verification Successful. Please wait a second...")
                     
@@ -378,10 +397,45 @@ def main():
                                     continue
                             
                             elif bank_acc_management_choice == 2:
-                                print("====================================")
+                                print("=======================================")
                                 print()
                                 menu_notifier(message="[NOTICE] You selected [2] List All of Existing Accounts. Please wait a second...")
                                 ACCOUNT_INSTANCE.list_all_accounts()
+                            
+                            elif bank_acc_management_choice == 3:
+                                print("=======================================")
+                                print()
+                                menu_notifier(message="[NOTICE] You selected [3] Find an Account. Please wait a second...")
+                                acc_id = account_finding()
+                                account_found = findAccount(acc_id)
+
+                                if account_found:
+                                    # Class instance
+                                    ACCOUNT_INSTANCE = BankAccount(id=acc_id)
+                                    print()
+                                    print()
+                                    print("\t   --- Results ---")
+                                    print("====================================")
+                                    print("\tAccount Found")
+                                    print("====================================")
+                                    print()
+                                    ACCOUNT_INSTANCE.printDetails()
+                                    print()
+                                    print("====================================")
+                                    input("      Press [ENTER] to Back")
+                                    continue
+                                else:
+                                    print()
+                                    print()
+                                    print("\t   --- Results ---")
+                                    print("====================================")
+                                    print()
+                                    print("     This Account doesn't Exist")
+                                    print()
+                                    print("====================================")
+                                    input("      Press [ENTER] to Back")
+                                    continue
+
 
                         except:
                             print("====================================")
@@ -423,7 +477,7 @@ def main():
                     print()
                     print("\t   --- Results ---")
                     print("====================================")
-                    print("\t\tClient found")
+                    print("\t\tClient Found")
                     print("====================================")
                     print()
                     CLIENT_INSTANCE.printDetails()
