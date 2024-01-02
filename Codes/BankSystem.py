@@ -66,7 +66,7 @@ def initialMenu():
         try:
             valid_choices = INITIAL_MENUS_VALID_CHOICES
 
-            menu_layout(title="KiBank Illuminaire", choice1="Account Management", choice2="Client Management", choice3="Exit")
+            menu_layout(title="KiBank Illuminaire", choice1="Open an Account", choice2="Client Management", choice3="Exit")
             initial_menu_choice = int(input("\tEnter your choice: "))
 
             if initial_menu_choice not in valid_choices:
@@ -216,11 +216,10 @@ def account_finding():
             menu_notifier(message="[ERROR] You entered an invalid input. Please try again.")
             continue
 
-
 def bank_acc_management_menu():
     while True:
         try:
-            valid_choices = [0, 1, 2, 3, 4, 5, 6]
+            valid_choices = [0, 1, 2, 3, 4, 5]
             
             clear()
             print("=======================================")
@@ -232,7 +231,6 @@ def bank_acc_management_menu():
             print("[3] Find an Account")
             print("[4] Deposit to an Account")
             print("[5] Withdraw from an Account")
-            print("[6] View your Client Profile")
             print("[0] Out")
             print()
             print("=======================================")
@@ -240,7 +238,7 @@ def bank_acc_management_menu():
 
             if user_choice not in valid_choices:
                 print()
-                menu_notifier(message="[ERROR] You can only choose numbers from [0] up to [7]. Please try again.")
+                menu_notifier(message="[ERROR] You can only choose numbers from [0] up to [5]. Please try again.")
                 continue
             else:
                 return user_choice
@@ -249,7 +247,25 @@ def bank_acc_management_menu():
             menu_notifier(message="[ERROR] You entered an invalid input. Please try again.")
             continue
 
+def deposit_form():
+    while True:
+        try:
+            print("====================================")
+            print("\tDeposit to an Account")
+            print("====================================")
+            print()
+            account_id = int(input("Enter the Account ID: "))
+            deposit_amount = int(input("Enter the Deposit amount: "))
+            print()
+            print("====================================")
+            print()
 
+            return account_id, deposit_amount
+
+        except:
+            print()
+            menu_notifier(message="[ERROR] You entered an invalid input. Please try again.")
+            continue
 
 
 ##### Query functions
@@ -364,6 +380,7 @@ def main():
                 PIN_verification, user_PIN = client_PIN_verification()
 
                 if PIN_verification:
+                    print()
                     print("=====================================")
                     print()
                     menu_notifier(message="PIN Verification Successful. Please wait a second...")
@@ -435,7 +452,25 @@ def main():
                                     print("====================================")
                                     input("      Press [ENTER] to Back")
                                     continue
+                            
+                            elif bank_acc_management_choice == 4:
+                                print("=======================================")
+                                print()
+                                menu_notifier(message="[NOTICE] You selected [4] Deposit. Please wait a second...") 
 
+                                account_id, deposit_amount = deposit_form()
+
+                                ACCOUNT_INSTANCE = BankAccount()
+
+                                ACCOUNT_INSTANCE.deposit(account_id, deposit_amount)
+                                
+                                print()
+                                print("====================================")
+                                input("    Press [ENTER] to continue")
+
+
+                            elif bank_acc_management_choice == 5:
+                                pass
 
                         except:
                             print("====================================")

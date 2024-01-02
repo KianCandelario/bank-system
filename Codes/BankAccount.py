@@ -56,6 +56,11 @@ class BankAccount:
         print("=" * 27)
         input("Press [ENTER] to Back")
 
+    def update_balance(self, account_id, new_balance):
+        query = f"UPDATE {self.ACCOUNT_CONFIG['table_name']} SET {self.ACCOUNT_CONFIG['column2']} = {new_balance} WHERE {self.ACCOUNT_CONFIG['column1']} = {account_id}"
+        self.execute_query(query)
+        self.DATABASE.commit()
+
 
     ### Main functions
     def getBalance(self):
@@ -80,13 +85,21 @@ class BankAccount:
         if result:
             account_details = result[0]
             print(f"Account ID: {account_details[0]}")
-            print(f"Balance: {account_details[1]}")
+            print(f"Balance: ₱ {account_details[1]}")
             print(f"Client ID: {account_details[2]}")
         else:
             print("Client not found")
 
-    def deposit():
-        pass
+    def deposit(self, account_id, deposit_amount):
+        self.id = account_id
+        current_balance = self.getBalance()
+        if current_balance is not None:
+            new_balance = current_balance + deposit_amount
+            self.update_balance(account_id, new_balance)
+            print(f"Deposit of ₱ {deposit_amount} successful.")
+            print(f"New balance: ₱ {new_balance}")
+        else:
+            print("Account not found")
 
-    def withdraw():
+    def withdraw(self, account_id, withdraw_amount):
         pass
