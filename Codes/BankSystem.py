@@ -131,7 +131,7 @@ def create_client_menu():
 
             is_dup = CLIENT_INSTANCE.is_duplicate_client_id(desired_id)
 
-            if is_dup:
+            if not is_dup:
                 surname = input("Enter your surname: ")
                 fname = input("Enter your first name: ")
                 contact_no = input("Enter your contact number: ")
@@ -158,7 +158,7 @@ def bank_account_creation_form():
             bank_acc_id = int(input(("Enter your desired Bank Account ID [XXXX]: ")))
 
             is_dup = ACCOUNT_INSTANCE.is_duplicate_account_id(bank_acc_id)
-            if is_dup:
+            if not is_dup:
                 balance = int(input(("Enter the balance: ")))
             else:
                 print()
