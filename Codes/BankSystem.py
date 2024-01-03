@@ -23,6 +23,7 @@ bc_configs =  BankClient.CLIENT_CONFIG
 bc_db = BankClient.DATABASE
 
 
+
 ###### Auxillary functions
 def clear():
     os.system('cls' if os.name=='nt' else 'clear')
@@ -56,7 +57,6 @@ def get_clientID_by_PIN(pin):
         return result[0][0]  # Return the first matching ClientID
     else:
         return None  # Return None if no matching PIN is found
-
 
 
 
@@ -203,7 +203,6 @@ def client_verification():
                     clear()
                     break
                 
-
         except ValueError:
             print()
             menu_notifier(message="[ERROR] You entered an invalid input. Please enter a valid PIN.")
@@ -386,7 +385,6 @@ def createAccount(bank_acc_id, balance, client_id):
 
         return False
 
-
 def createClient(id, surname, first_name, contact_no, gmail, pin):
     try:
         query = f"INSERT INTO {bc_configs['table_name']} ({bc_configs['column1']}, {bc_configs['column2']}, {bc_configs['column3']}, {bc_configs['column4']}, {bc_configs['column5']}, {bc_configs['column6']}) VALUES (%s, %s, %s, %s, %s, %s)"
@@ -405,14 +403,12 @@ def createClient(id, surname, first_name, contact_no, gmail, pin):
 
         return False
 
-
 def findAccount(acc_id):
     query = f"SELECT * FROM {ba_configs['table_name']} WHERE {ba_configs['column1']} = {acc_id}"
     ba_cursor.execute(query)
     result = ba_cursor.fetchall()
 
     return bool(result)
-
 
 def findClient(client_id):
     query = f"SELECT * FROM {bc_configs['table_name']} WHERE {bc_configs['column1']} = {client_id}"
@@ -566,7 +562,6 @@ def main():
                                 print("====================================")
                                 input("    Press [ENTER] to continue")
 
-
                             elif bank_acc_management_choice == 5:
                                 print("=======================================")
                                 print()
@@ -587,8 +582,6 @@ def main():
                             menu_notifier(message=f"[ERROR] You entered an invalid input. Please try again...")
                             continue
                 
-
-
         elif create_acc_or_client == 2:
             print("====================================")
             print()
@@ -641,14 +634,11 @@ def main():
                     input("      Press [ENTER] to Back")
                     continue
                 
-
-
         elif create_acc_or_client == 0:
             print()
             print("[NOTICE] Thank you for trusting our bank!")
             print()
             sys.exit()
-
 
 
 

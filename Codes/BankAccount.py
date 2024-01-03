@@ -27,6 +27,7 @@ class BankAccount:
         self.initial_deposit = initial_deposit
     
 
+
     ### Auxillary functions
     def execute_query(self, query):
         self.CURSOR.execute(query)
@@ -96,6 +97,7 @@ class BankAccount:
         query = f"UPDATE {self.ACCOUNT_CONFIG['table_name']} SET {self.ACCOUNT_CONFIG['column2']} = {new_balance} WHERE {self.ACCOUNT_CONFIG['column1']} = {account_id}"
         self.execute_query(query)
         self.DATABASE.commit()
+
 
 
     ### Main functions

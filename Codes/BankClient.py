@@ -30,6 +30,7 @@ class BankClient:
         self.name = name
     
 
+
     ### Auxillary function
     def execute_query(self, query):
         self.CURSOR.execute(query)
@@ -63,6 +64,7 @@ class BankClient:
 
         print("====================================")
         input("\tPress [ENTER] to Back")
+
 
 
     ### Main Functions
