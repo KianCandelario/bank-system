@@ -86,6 +86,7 @@ class BankAccount:
                 print(f"Account ID: {account_id}")
                 print(f"Client ID: {client_id}")
                 print(f"Balance: {balance}")
+                print()
         else:
             print("\tNo bank accounts found")
 

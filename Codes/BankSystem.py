@@ -264,7 +264,7 @@ def bank_acc_management_menu():
 
             if user_choice not in valid_choices:
                 print()
-                menu_notifier(message="[ERROR] You can only choose numbers from [0] up to [5]. Please try again.")
+                menu_notifier(message="[ERROR] You can only choose numbers from [0] up to [6]. Please try again.")
                 continue
             else:
                 return user_choice
@@ -445,6 +445,7 @@ def main():
                 client_successful = createClient(desired_id, surname, fname, contact_no, gmail, pin)
 
                 if client_successful:
+                    print()
                     menu_notifier(message="Client creation successful.")
 
                     print("[NOTICE] Creating your First Bank Account")
@@ -455,6 +456,7 @@ def main():
                     bank_successful = createAccount(bank_acc_id, balance, desired_id)
 
                     if bank_successful:
+                        print()
                         menu_notifier(message="Account created successfully. Going back to the menu...")
                         continue
 
@@ -597,6 +599,7 @@ def main():
                 print("====================================")
                 print()
                 menu_notifier(message="[NOTICE] You selected [1] List All of the Clients. Please wait a second...")
+                CLIENT_INSTANCE = BankClient()
                 CLIENT_INSTANCE.list_all_clients()
 
             elif open_acc_or_client_m == 2:
