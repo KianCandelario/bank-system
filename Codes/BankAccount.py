@@ -33,6 +33,11 @@ class BankAccount:
         result = self.CURSOR.fetchall()
         return result
     
+    def is_duplicate_account_id(self, account_id):
+        query = f"SELECT * FROM {self.ACCOUNT_CONFIG['table_name']} WHERE {self.ACCOUNT_CONFIG['column1']} = {account_id}"
+        result = self.execute_query(query)
+        return bool(result)
+    
     def get_balance(self):
         query = f"SELECT {self.ACCOUNT_CONFIG['column2']} FROM {self.ACCOUNT_CONFIG['table_name']} WHERE {self.ACCOUNT_CONFIG['column1']} = {self.id}"
         result = self.execute_query(query)
@@ -66,24 +71,26 @@ class BankAccount:
         query = f"SELECT * FROM {self.ACCOUNT_CONFIG['table_name']}"
         result = self.execute_query(query)
 
-        print("=" * 27)
-        print("List of All Bank Accounts")
-        print("=" * 27)
+        print("====================================")
+        print("    List of All Bank Accounts")
+        print("====================================")
+        print()
 
         if result:
             for account_details in result:
-                self.id = self.getIDNumber()
+                account_id = account_details[0]
                 client_id = account_details[2] 
-                balance = self.getBalance()
+                balance = account_details[1]
 
-                print(f"Account ID: {self.id}")
+                print(f"Account ID: {account_id}")
                 print(f"Client ID: {client_id}")
-                print(f"Balance: {balance}\n")
+                print(f"Balance: {balance}")
         else:
-            print("No bank accounts found")
+            print("\tNo bank accounts found")
 
-        print("=" * 27)
-        input("Press [ENTER] to Back")
+        print()
+        print("====================================")
+        input("\tPress [ENTER] to Back")
 
     def update_balance(self, account_id, new_balance):
         query = f"UPDATE {self.ACCOUNT_CONFIG['table_name']} SET {self.ACCOUNT_CONFIG['column2']} = {new_balance} WHERE {self.ACCOUNT_CONFIG['column1']} = {account_id}"

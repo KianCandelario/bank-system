@@ -36,6 +36,11 @@ class BankClient:
         result = self.CURSOR.fetchall()
         return result    
 
+    def is_duplicate_client_id(self, client_id):
+        query = f"SELECT * FROM {self.CLIENT_CONFIG['table_name']} WHERE {self.CLIENT_CONFIG['column1']} = {client_id}"
+        result = self.execute_query(query)
+        return bool(result)
+
     def list_all_clients(self):
         query = f"SELECT * FROM {self.CLIENT_CONFIG['table_name']}"
         result = self.execute_query(query)

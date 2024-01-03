@@ -129,13 +129,21 @@ def create_client_menu():
             print("====================================")
             print()
             desired_id = int(input("Enter your desired Client ID [XXXX]: "))
-            surname = input("Enter your surname: ")
-            fname = input("Enter your first name: ")
-            contact_no = input("Enter your contact number: ")
-            gmail = input("Enter your email address: ")
-            pin = input("Enter your desired PIN number [XXXX]: ")
 
-            return desired_id, surname, fname, contact_no, gmail, pin
+            is_dup = CLIENT_INSTANCE.is_duplicate_client_id(desired_id)
+
+            if is_dup:
+                surname = input("Enter your surname: ")
+                fname = input("Enter your first name: ")
+                contact_no = input("Enter your contact number: ")
+                gmail = input("Enter your email address: ")
+                pin = input("Enter your desired PIN number [XXXX]: ")
+        
+                return desired_id, surname, fname, contact_no, gmail, pin
+            else:
+                print()
+                menu_notifier(message="[ERROR] You entered an existing Client ID. Please try again.")
+                continue
         except:
             print()
             menu_notifier(message="[ERROR] You entered an invalid input. Please try again.")
@@ -149,7 +157,14 @@ def bank_account_creation_form():
             print("=====================================")
             print()
             bank_acc_id = int(input(("Enter your desired Bank Account ID [XXXX]: ")))
-            balance = int(input(("Enter the balance: ")))
+
+            is_dup = ACCOUNT_INSTANCE.is_duplicate_account_id(bank_acc_id)
+            if is_dup:
+                balance = int(input(("Enter the balance: ")))
+            else:
+                print()
+                menu_notifier(message="[ERROR] You entered an existing Account ID. Please try again.")
+                continue
 
             return bank_acc_id, balance
         except:
@@ -157,17 +172,18 @@ def bank_account_creation_form():
             menu_notifier(message="[ERROR] You entered an invalid input. Please try again.")
             continue
 
-def client_PIN_verification():
+def client_verification():
     while True:
         try:
             print("=====================================")
-            print("  Returning Client PIN Verification")
+            print("   Returning Client Verification")
             print("=====================================")
             print()
+            user_ID = int(input("Enter your Client ID [XXXX]: "))
             user_PIN = int(input("Enter your Client PIN [XXXX]: "))
 
-            # Check if PIN exists in the database
-            query = f"SELECT * FROM {bc_configs['table_name']} WHERE {bc_configs['column6']} = {user_PIN}"
+            # Check if ID and PIN exist in the database
+            query = f"SELECT * FROM {bc_configs['table_name']} WHERE {bc_configs['column1']} = {user_ID} AND {bc_configs['column6']} = {user_PIN}"
             bc_cursor.execute(query)
             result = bc_cursor.fetchone()
 
@@ -175,7 +191,18 @@ def client_PIN_verification():
                 return True, user_PIN
             else:
                 print()
-                menu_notifier(message="[ERROR] PIN does not exist. Please try again.")
+                print("=====================================")
+                print()
+                print("[ERROR] ID and PIN combination does not exist. Please try again.")
+                print()
+                decision = input("Press [Y/N] to try again or return: ").lower()
+                if decision == 'y':
+                    clear()
+                    continue
+                elif decision == 'n':
+                    clear()
+                    break
+                
 
         except ValueError:
             print()
@@ -292,10 +319,12 @@ def withdraw_form():
                 print()
                 print("====================================")
                 print()
-                decision = input("Press [Y/N] to try again or return...")
-                if decision == 'Y':
+                decision = input("Press [Y/N] to try again or return: ").lower()
+                if decision == 'y':
+                    clear()
                     continue
-                elif decision == 'N':
+                elif decision == 'n':
+                    clear()
                     break
         except:
             print()
@@ -324,9 +353,11 @@ def delete_account_form():
                 print("====================================")
                 print()
                 decision = input("Press [Y/N] to try again or return: ").lower()
-                if decision == 'Y':
+                if decision == 'y':
+                    clear()
                     continue
-                elif decision == 'N':
+                elif decision == 'n':
+                    clear()
                     break
 
         except:
@@ -409,7 +440,7 @@ def main():
                 menu_notifier(message="[NOTICE] You selected [0] Back. Going back to the previous screen...")
                 continue
 
-            if open_acc_or_client_m == 1:
+            elif open_acc_or_client_m == 1:
                 print("====================================")
                 print()
                 menu_notifier(message="[NOTICE] You selected [1] First-time Client. Please wait a second...")
@@ -445,13 +476,13 @@ def main():
                 print()
                 menu_notifier(message="[NOTICE] You selected [2] Returning Client. Please wait a second...")
 
-                PIN_verification, user_PIN = client_PIN_verification()
+                PIN_verification, user_PIN = client_verification()
 
                 if PIN_verification:
                     print()
                     print("=====================================")
                     print()
-                    menu_notifier(message="PIN Verification Successful. Please wait a second...")
+                    menu_notifier(message="Client Verification Successful. Please wait a second...")
                     
                     while True:
                         try:
@@ -485,6 +516,7 @@ def main():
                                 print("=======================================")
                                 print()
                                 menu_notifier(message="[NOTICE] You selected [2] List All of Existing Accounts. Please wait a second...")
+                                ACCOUNT_INSTANCE = BankAccount()
                                 ACCOUNT_INSTANCE.list_all_accounts()
                             
                             elif bank_acc_management_choice == 3:
@@ -501,7 +533,7 @@ def main():
                                     print()
                                     print("\t   --- Results ---")
                                     print("====================================")
-                                    print("\tAccount Found")
+                                    print("\t    Account Found")
                                     print("====================================")
                                     print()
                                     ACCOUNT_INSTANCE.printDetails()
@@ -552,7 +584,7 @@ def main():
                         except:
                             print("====================================")
                             print()
-                            menu_notifier(message="[ERROR] You entered an invalid input. Please try again...")
+                            menu_notifier(message=f"[ERROR] You entered an invalid input. Please try again...")
                             continue
                 
 
