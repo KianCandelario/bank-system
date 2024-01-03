@@ -219,7 +219,7 @@ def account_finding():
 def bank_acc_management_menu():
     while True:
         try:
-            valid_choices = [0, 1, 2, 3, 4, 5]
+            valid_choices = [0, 1, 2, 3, 4, 5, 6]
             
             clear()
             print("=======================================")
@@ -231,6 +231,7 @@ def bank_acc_management_menu():
             print("[3] Find an Account")
             print("[4] Deposit to an Account")
             print("[5] Withdraw from an Account")
+            print("[6] Delete an Account")
             print("[0] Out")
             print()
             print("=======================================")
@@ -288,11 +289,51 @@ def withdraw_form():
                 input("Press [ENTER] to continue...")
                 break
             else:
-                continue
+                print()
+                print("====================================")
+                print()
+                decision = input("Press [Y/N] to try again or return...")
+                if decision == 'Y':
+                    continue
+                elif decision == 'N':
+                    break
         except:
             print()
             menu_notifier(message="[ERROR] You entered an invalid input. Please try again.")
             continue
+
+def delete_account_form():
+    while True:
+        try:
+            print("====================================")
+            print("\tDelete an Account")
+            print("====================================")
+            print()
+            account_id = int(input("Enter the Account ID: "))
+            print()
+
+            successful = ACCOUNT_INSTANCE.delete_account(account_id)
+            if successful:
+                print()
+                print("====================================")
+                print()
+                input("Press [ENTER] to continue...")
+                break
+            else:
+                print()
+                print("====================================")
+                print()
+                decision = input("Press [Y/N] to try again or return: ").lower()
+                if decision == 'Y':
+                    continue
+                elif decision == 'N':
+                    break
+
+        except:
+            print()
+            menu_notifier(message="[ERROR] You entered an invalid input. Please try again.")
+            continue
+
 
 
 ##### Query functions
@@ -500,6 +541,13 @@ def main():
                                 menu_notifier(message="[NOTICE] You selected [5] Withdraw. Please wait a second...")
 
                                 withdraw_form()
+                            
+                            elif bank_acc_management_choice == 6:
+                                print("=======================================")
+                                print()
+                                menu_notifier(message="[NOTICE] You selected [6] Delete an Account. Please wait a second...")
+
+                                delete_account_form()
                                 
                         except:
                             print("====================================")

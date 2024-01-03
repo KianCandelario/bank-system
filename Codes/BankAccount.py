@@ -32,6 +32,35 @@ class BankAccount:
         self.CURSOR.execute(query)
         result = self.CURSOR.fetchall()
         return result
+    
+    def get_balance(self):
+        query = f"SELECT {self.ACCOUNT_CONFIG['column2']} FROM {self.ACCOUNT_CONFIG['table_name']} WHERE {self.ACCOUNT_CONFIG['column1']} = {self.id}"
+        result = self.execute_query(query)
+        if result:
+            return result[0][0]
+        else:
+            return None
+
+    def delete_account(self, account_id):
+        self.id = account_id
+        current_balance = self.get_balance()
+
+        if current_balance is not None:
+            if current_balance == 0:
+                # Delete account when balance is 0
+                delete_query = f"DELETE FROM {self.ACCOUNT_CONFIG['table_name']} WHERE {self.ACCOUNT_CONFIG['column1']} = {self.id}"
+                self.execute_query(delete_query)
+                self.DATABASE.commit()
+                print(f"Account with ID {self.id} deleted successfully.")
+
+                return True
+            else:
+                print(f"Current balance: {current_balance}")
+                print("Cannot delete account with non-zero balance.")
+
+                return False
+        else:
+            print("Account not found.")
 
     def list_all_accounts(self):
         query = f"SELECT * FROM {self.ACCOUNT_CONFIG['table_name']}"
